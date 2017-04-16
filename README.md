@@ -1,6 +1,6 @@
 # Job and Skill Analytics
 
-This repo contains source codes for analyzing data of job postings to gain insights on jobs and skills required for different jobs and sectors. The codes are written in `Jupyter` notebooks and all main functions are centralized in `ja_helpers.py` module.
+This repo contains source codes for analyzing data of job postings to gain insights on jobs and skills required for different jobs and sectors. The codes are written in `Jupyter` notebooks and all helper functions are centralized in `ja_helpers.py` module. In addition, there are some more helpers in `my_util.py`, `stat_helpers.py` and `parse_funs.py`.
 
 ## Main components
 Main components handle the following steps in the pipeline: i) __Preprocess job posts__ and meta-data, ii) __Extract features__ for topic and matrix factorization (MF) models, iii) __Cluster skills__ using the models, iv) __Connect job titles__ based on their topic similarity and v) __Determine consistency__ among job posts of a given job title.
