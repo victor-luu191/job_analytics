@@ -22,15 +22,18 @@ The script uses the parser from https://jobsense.sg/api/get/job-title-parser/.
 In addition, there is also one part for cleaning data on employers.
 
 2. Extract features required by topic and MF models.
+
 Each job post is regarded as a document and each skill is an entry in the vocabulary of skills.
 The features for LDA are represented by a document-skill matrix whose each entry _e(d, s)_ is occurrence count of skill _s_ in document _d_. As the skills can be uni-, bi- or tri-grams, there is one important difference from counting uni-gram words in documents: __counts of certain skills can be over-estimated__!!! For example, count of _programming_, as a skill itself, can be inflated as it also appears in other skills including 'Java programming', 'Python programming' and so on.
 
 The script in `extract_feat.ipynb` handles this problem by first counting occurence of longer n-grams. Once the couting is done, it removes longer n-grams from documents and go on to count shorter n-grams. The removal gets rid of the over-estimation.
 
 3. Cluster skills using LDA.
-I adopt the LDA module in scikit-learn. The script is in `cluster_skill.ipynb`.
+
+I adopt the module for LDA in scikit-learn. The script is in `cluster_skill.ipynb`.
 
 4. Connect job titles.
+
 Given topic distribution of each job post learnt by LDA, we can compute topic similarity score between any two job posts as the similarity of their topic distributions. 
 
 Given two job titles t and t' with their sets of job posts P(t) and P(t'), we define similarity between t and t' as the average of pairwise similarity scores of pairs of posts (p, p') where p and p' belong to P(t) and P(t') respectively.
@@ -38,3 +41,7 @@ Given two job titles t and t' with their sets of job posts P(t) and P(t'), we de
 Similarity scores between pairs of job titles under the same domain are precomputed by the script in `sim_by_domain.ipynb`. Similarly, similarity scores between pairs of job titles with same primary function are precomputed in `sim_by_func.ipynb`.
 
 5. Determine consistency among job posts.
+
+We define consistency score for a given set of job posts as the average of pairwise similarity scores over all pairs of posts from the set.
+
+Given a job title, we then define its consistency score as the consistency score of the set of its posts. The consistency score allows us to profile a job title as _general_ or _niche_ job title (e.g. Manager is general while Software Engineer is niche). Computing consistency scores is done in `job_consistency.ipynb`.
