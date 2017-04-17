@@ -8,7 +8,7 @@ Main components handle the following steps in the pipeline: i) __Preprocess job 
 Following are details on each component.
 
 1. __Preprocess__. 
-This step is handled by `preprocess` and `parse_title` notebooks.
+Maily handled by `preprocess` and `parse_title` notebooks. In addition, there is also a notebook `filter_dups` for filtering __duplicated job posts__, which are basically the same posting but re-posted several times. This happens in two cases: i) different branches of a group/big company post the same posting or ii) a company and its representing recruiting agencies post the same posting.
 
 `parse_title` parses each job titles into separate components: position, domain and primary function (some job titles may also have secondary function). This parsing serves two goals: 
   + grouping job titles by their domains or functions (or by position).
