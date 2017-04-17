@@ -1,9 +1,9 @@
 import requests
 import pandas as pd
 import numpy as np
-import time
 import os
 
+from time import time
 from my_util import *
 
 # Global vars
@@ -47,13 +47,12 @@ def components(parsed_title):
                          'position': position, 'sec_func': sec_func}, 
                         index=[1])
 
-# two_titles = []
 def getParts(response, job_title):
     j_obj = response.json();
-    # if j_obj['exception'] == 'Invalid Job Title':
-    #     print('{} is regarded as invalid by the parser'.format(job_title))
-     	# global invalid_titles
-     	# invalid_titles.append(job_title)
+    if j_obj['exception'] == 'Invalid Job Title':
+        print('{} is regarded as invalid by the parser'.format(job_title))
+     	global invalid_titles
+     	invalid_titles.append(job_title)
 
     keys = toStr(j_obj.keys())
     #     print(keys) # debug
@@ -68,7 +67,6 @@ def getParts(response, job_title):
                 res = components(out[0]['title_1'])
             else:
                 print('parsing {} gives > 1 title in output'.format(job_title))
-                # global two_titles; two_titles.append(job_title)
                 
                 t1 = out[0]['title_1']; t2 = out[1]['title_2']
                 c1, c2 = components(t1).iloc[0], components(t2).iloc[0]
