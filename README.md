@@ -25,7 +25,7 @@ In addition, there is also one part for cleaning data on employers. Input: raw/e
   + standardizing job titles to unify different forms of the same job title e.g. Software Engineer and Engineer, Software will be unified as Software Engineer.
 The script uses the parser from https://jobsense.sg/api/get/job-title-parser/.
 
-+ Input: __unique titles__ of job posts in either data/clean/doc_index_filter.csv or any table of job posts with titles included
++ Input: __unique titles__ of job posts in either data/clean/doc_index_filter.csv or any table of job posts with titles included.
 + Output: a table where each row contains a job title together with its __components__ obtained from parsing.
 
 2. __Extract features__ required by topic and MF models.
@@ -42,7 +42,8 @@ The script in `extract_feat.ipynb` handles this problem by first counting occure
 
 I adopt the module for LDA in scikit-learn. The script is in `cluster_skill.ipynb`.
 + Input: no. of topics _k_ and document-skill matrix in clean/doc_skill.mtx file.
-+ Output: for each _k_, a matrix representing topics as word distributions (saved in {_k_}topic_word_dist) and a matrix representing topic distributions of documents (saved in doc_{k}_topic_distr.mtx). Due to storage limitations, the matrices are compressed in folders word_dists.zip and doc_topic_dists.zip (Only doc_20topic_distr.mtx are unzipped for convenience).
++ Output: all outputs in this step are stored in results/lda in G drive. For each _k_, return a matrix representing topics as word distributions (saved in {_k_}topic_word_dist) and a matrix representing topic distributions of documents (saved in doc_{k}_topic_distr.mtx). Due to storage limitations, the matrices are compressed in folders word_dists.zip and doc_topic_dists.zip (Only doc_20topic_distr.mtx are unzipped for convenience).
+
 __Note__: index of documents in doc_{k}_topic_distr.mtx and doc_skill.mtx should match with each other and with doc_index.csv.
 
 4. __Connect job titles__.
@@ -51,7 +52,13 @@ Given topic distribution of each job post learnt by LDA, we can compute topic si
 
 Given two job titles t and t' with their sets of job posts P(t) and P(t'), we define similarity between t and t' as the average of pairwise similarity scores of pairs of posts (p, p') where p and p' belong to P(t) and P(t') respectively.
 
-Similarity scores between pairs of job titles under the same domain are precomputed by the script in `sim_by_domain.ipynb`. Similarly, similarity scores between pairs of job titles with same primary function are precomputed in `sim_by_func.ipynb`.
+Similarity scores between pairs of job titles under the same domain are precomputed by the script in `sim_by_domain.ipynb`.
++ In: parsed titles grouped by domains, doc_index_filter.csv (with document indices for lookup and standard job titles) and doc_20topic_distr.mtx (to retrieve topic distributions of documents). 
++ Out: for each domain, return pairwise similarities of job titles in that domain. All the similarity results are saved in bydomain_sims.rar.
+
+Similarly, similarity scores between pairs of job titles with same primary function are precomputed in `sim_by_func.ipynb`.
++ In: same as above but now titles are grouped by primary functions.
++ Out: for each function, return pairwise similarities of job titles in that function. All the similarity results are saved in byfunction_sims.rar.
 
 5. __Determine consistency among job posts.__
 
