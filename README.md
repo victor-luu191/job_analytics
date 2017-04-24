@@ -10,16 +10,25 @@ Following are details on each component.
 1. __Preprocess__. 
 Maily handled by `preprocess` and `parse_title` notebooks. In addition, there is also a notebook `filter_dups` for filtering __duplicated job posts__, which are basically the same posting but re-posted several times. This happens in two cases: i) different branches of a group/big company post the same posting or ii) a company and its representing recruiting agencies post the same posting.
 
+`preprocess` handles the following tasks:
+  + filter posts containing only 1 skill
+  + filter skills occuring in only 1 post
+  + filter stop-word skills, e.g. business
+
+Input: job post texts (with html tags and punctuations already removed by beautifulsoup) and skill vocabulary.
+
+Output: filtered posts (saved in clean/job_posts.csv) and filtered skill vocabulary.
+
+In addition, there is also one part for cleaning data on employers. Input: raw/employers.csv file containing employer data such as UENs and employer names. Output: clean employer data stored in clean/employers.csv file.
+
 `parse_title` parses each job titles into separate components: position, domain and primary function (some job titles may also have secondary function). This parsing serves two goals: 
   + grouping job titles by their domains or functions (or by position).
   + standardizing job titles to unify different forms of the same job title e.g. Software Engineer and Engineer, Software will be unified as Software Engineer.
 The script uses the parser from https://jobsense.sg/api/get/job-title-parser/.
 
-`preprocess` handles the following tasks:
-  + filter posts containing only 1 skill
-  + filter skills occuring in only 1 post
-  + filter stop-word skills, e.g. business
-In addition, there is also one part for cleaning data on employers.
+Input: __unique titles__ of job posts in either data/clean/doc_index_filter.csv or any table of job posts with titles included
+
+Output: a table where each row contains a job title together with its __components__ obtained from parsing.
 
 2. __Extract features__ required by topic and MF models.
 
@@ -27,6 +36,10 @@ Each job post is regarded as a document and each skill is an entry in the vocabu
 The features for LDA are represented by a document-skill matrix whose each entry _e(d, s)_ is occurrence count of skill _s_ in document _d_. As the skills can be uni-, bi- or tri-grams, there is one important difference from counting uni-gram words in documents: __counts of certain skills can be over-estimated__!!! For example, count of _programming_, as a skill itself, can be inflated as it also appears in other skills including 'Java programming', 'Python programming' and so on.
 
 The script in `extract_feat.ipynb` handles this problem by first counting occurence of longer n-grams. Once the couting is done, it removes longer n-grams from documents and go on to count shorter n-grams. The removal gets rid of the over-estimation.
+
+Input: filtered job posts and skill vocabulary.
+
+Output: document-skill matrix stored in clean/doc_skill.mtx file. In this matrix, index of documents (i.e., which job posts go with which row) are saved in clean/doc_index.csv or clean/doc_index_filter.csv; similarly index of skills are stored in clean/skill_index.csv. These indices should be kept unchanged for correct lookups later.
 
 3. __Cluster skills__ using LDA.
 
