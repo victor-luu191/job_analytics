@@ -15,9 +15,8 @@ Maily handled by `preprocess` and `parse_title` notebooks. In addition, there is
   + filter skills occuring in only 1 post
   + filter stop-word skills, e.g. business
 
-Input: job post texts (with html tags and punctuations already removed by beautifulsoup) and skill vocabulary.
-
-Output: filtered posts (saved in clean/job_posts.csv) and filtered skill vocabulary.
++ Input: job post texts (with html tags and punctuations already removed by beautifulsoup) and skill vocabulary.
++ Output: filtered posts (saved in clean/job_posts.csv) and filtered skill vocabulary.
 
 In addition, there is also one part for cleaning data on employers. Input: raw/employers.csv file containing employer data such as UENs and employer names. Output: clean employer data stored in clean/employers.csv file.
 
@@ -26,9 +25,8 @@ In addition, there is also one part for cleaning data on employers. Input: raw/e
   + standardizing job titles to unify different forms of the same job title e.g. Software Engineer and Engineer, Software will be unified as Software Engineer.
 The script uses the parser from https://jobsense.sg/api/get/job-title-parser/.
 
-Input: __unique titles__ of job posts in either data/clean/doc_index_filter.csv or any table of job posts with titles included
-
-Output: a table where each row contains a job title together with its __components__ obtained from parsing.
++ Input: __unique titles__ of job posts in either data/clean/doc_index_filter.csv or any table of job posts with titles included
++ Output: a table where each row contains a job title together with its __components__ obtained from parsing.
 
 2. __Extract features__ required by topic and MF models.
 
@@ -37,13 +35,15 @@ The features for LDA are represented by a document-skill matrix whose each entry
 
 The script in `extract_feat.ipynb` handles this problem by first counting occurence of longer n-grams. Once the couting is done, it removes longer n-grams from documents and go on to count shorter n-grams. The removal gets rid of the over-estimation.
 
-Input: filtered job posts and skill vocabulary.
-
-Output: document-skill matrix stored in clean/doc_skill.mtx file. In this matrix, index of documents (i.e., which job posts go with which row) are saved in clean/doc_index.csv or clean/doc_index_filter.csv; similarly index of skills are stored in clean/skill_index.csv. These indices should be kept unchanged for correct lookups later.
++ Input: filtered job posts and skill vocabulary.
++ Output: document-skill matrix stored in clean/doc_skill.mtx file. In this matrix, index of documents (i.e., which job posts go with which row) are saved in clean/doc_index.csv or clean/doc_index_filter.csv; similarly index of skills are stored in clean/skill_index.csv. These indices should be kept unchanged for correct lookups later.
 
 3. __Cluster skills__ using LDA.
 
 I adopt the module for LDA in scikit-learn. The script is in `cluster_skill.ipynb`.
++ Input: no. of topics _k_ and document-skill matrix in clean/doc_skill.mtx file.
++ Output: for each _k_, a matrix representing topics as word distributions (saved in {_k_}topic_word_dist) and a matrix representing topic distributions of documents (saved in doc_{k}_topic_distr.mtx). Due to storage limitations, the matrices are compressed in folders word_dists.zip and doc_topic_dists.zip (Only doc_20topic_distr.mtx are unzipped for convenience).
+__Note__: index of documents in doc_{k}_topic_distr.mtx and doc_skill.mtx should match with each other and with doc_index.csv.
 
 4. __Connect job titles__.
 
