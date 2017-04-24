@@ -65,3 +65,6 @@ Similarly, similarity scores between pairs of job titles with same primary funct
 We define consistency score for a given set of job posts as the average of pairwise similarity scores over all pairs of posts from the set.
 
 Given a job title, we then define its consistency score as the consistency score of the set of its posts. The consistency score allows us to profile a job title as _general_ or _niche_ job title (e.g. Manager is general while Software Engineer is niche). Computing consistency scores is done in `job_consistency.ipynb`.
+
+## Others
+The notebook getStats.ipynb is dedicated to getting necessary statistics from data such as # job posts, # job titles, # domains and so on.
